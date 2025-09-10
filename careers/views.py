@@ -9,6 +9,9 @@ class CareerPostListCreate(generics.ListCreateAPIView):
     """
     queryset         = CareerPost.objects.all().order_by('-created_datetime')
     serializer_class = CareerPostSerializer
+    filterset_fields = ['username']
+    search_fields = ['title', 'content']
+    ordering_fields = ['created_datetime', 'username']
 
 class CareerPostDetail(generics.RetrieveUpdateDestroyAPIView):
     """
