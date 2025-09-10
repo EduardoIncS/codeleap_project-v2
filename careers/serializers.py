@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CareerPost, PostLike, PostComment
+from .models import CareerPost, PostAttachment, PostLike, PostComment
 
 class CareerPostSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,3 +17,8 @@ class PostCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostComment
         fields = ['id', 'user', 'post', 'content', 'created_at']
+
+class PostAttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostAttachment
+        fields = ['id', 'file', 'uploaded_at']

@@ -22,7 +22,6 @@ class PostComment(models.Model):
     post = models.ForeignKey(CareerPost, related_name='comments', on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-
 class PostAttachment(models.Model):
     post = models.ForeignKey(CareerPost, related_name='attachments', on_delete=models.CASCADE)
     file = models.FileField(upload_to='attachments/%Y/%m/%d/')

@@ -1,6 +1,7 @@
-from rest_framework import generics, permissions
-from .models import CareerPost, PostComment, PostLike
-from .serializers import CareerPostSerializer, PostCommentSerializer, PostLikeSerializer
+from rest_framework import generics, permissions, viewsets
+from rest_framework.parsers import MultiPartParser, FormParser
+from .models import CareerPost, PostComment, PostLike, PostAttachment
+from .serializers import CareerPostSerializer, PostCommentSerializer, PostLikeSerializer, PostAttachmentSerializer
 
 class CareerPostListCreate(generics.ListCreateAPIView):
     """
@@ -46,3 +47,9 @@ class PostCommentListCreate(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, post_id=self.kwargs['pk'])
+
+class PostAttachmentViewSet(viewsets.ModelViewSet):
+    serializer_class = PostAttachmentSerializer
+    parser_classes = [MultiPartParser, FormParser]
+    def get_queryset(self):
+        return PostAttachment.objects.filter(post_id=self.kwargs['post_pk'])
