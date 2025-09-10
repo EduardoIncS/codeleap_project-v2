@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions
-from .models import CareerPost, PostLike
-from .serializers import CareerPostSerializer, PostLikeSerializer
+from .models import CareerPost, PostComment, PostLike
+from .serializers import CareerPostSerializer, PostCommentSerializer, PostLikeSerializer
 
 class CareerPostListCreate(generics.ListCreateAPIView):
     """
@@ -33,3 +33,13 @@ class PostLikeToggle(generics.CreateAPIView):
         like, created = PostLike.objects.get_or_create(user=user, post=post)
         if not created:
             like.delete()
+
+class PostCommentListCreate(generics.ListCreateAPIView):
+    serializer_class = PostCommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        return PostComment.objects.filter(post_id=self.kwargs['pk']).order_by('created_at')
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, post_id=self.kwargs['pk'])

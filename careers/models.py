@@ -17,3 +17,8 @@ class PostLike(models.Model):
 
     class Meta:
         unique_together = ('user', 'post')
+class PostComment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post = models.ForeignKey(CareerPost, related_name='comments', on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
