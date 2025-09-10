@@ -1,6 +1,6 @@
-from rest_framework import generics
-from .models import CareerPost
-from .serializers import CareerPostSerializer
+from rest_framework import generics, permissions
+from .models import CareerPost, PostLike
+from .serializers import CareerPostSerializer, PostLikeSerializer
 
 class CareerPostListCreate(generics.ListCreateAPIView):
     """
@@ -19,3 +19,17 @@ class CareerPostDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset         = CareerPost.objects.all()
     serializer_class = CareerPostSerializer
+
+class PostLikeToggle(generics.CreateAPIView):
+    queryset = PostLike.objects.all()
+    serializer_class = PostLikeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        post_id = self.kwargs['pk']
+        post = CareerPost.objects.get(pk=post_id)
+        # Se já existir, remove; senão cria
+        like, created = PostLike.objects.get_or_create(user=user, post=post)
+        if not created:
+            like.delete()
